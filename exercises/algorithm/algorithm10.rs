@@ -2,7 +2,6 @@
 	graph
 	This problem requires you to implement a basic graph functio
 */
-// I AM NOT DONE
 
 use std::collections::{HashMap, HashSet};
 use std::fmt;
@@ -30,6 +29,11 @@ impl Graph for UndirectedGraph {
     }
     fn add_edge(&mut self, edge: (&str, &str, i32)) {
         //TODO
+        let (src_node, dst_node, weight) = edge;
+        self.add_node(src_node);
+        self.add_node(dst_node);
+        self.adjacency_table.get_mut(src_node).unwrap().push((dst_node.into(), weight));
+        self.adjacency_table.get_mut(dst_node).unwrap().push((src_node.into(), weight));
     }
 }
 pub trait Graph {
@@ -38,11 +42,16 @@ pub trait Graph {
     fn adjacency_table(&self) -> &HashMap<String, Vec<(String, i32)>>;
     fn add_node(&mut self, node: &str) -> bool {
         //TODO
-		true
+		let adjacency_table = self.adjacency_table_mutable();
+        if adjacency_table.contains_key(node) {
+            false
+        } else {
+            let v = vec![];
+            adjacency_table.insert(node.into(), v);
+            true
+        }
     }
-    fn add_edge(&mut self, edge: (&str, &str, i32)) {
-        //TODO
-    }
+    fn add_edge(&mut self, edge: (&str, &str, i32));
     fn contains(&self, node: &str) -> bool {
         self.adjacency_table().get(node).is_some()
     }
